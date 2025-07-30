@@ -12,22 +12,20 @@ function App() {
 
   // State to hold the current search term entered by the user
   const [searchTerm, setSearchTerm] = useState("");
-  // State to hold the found meaning of the word, if any
-  const [foundMeaning, setFoundMeaning] = useState("");
-  // State to hold error messages, specifically "Word not found in the dictionary."
-  const [errorMessage, setErrorMessage] = useState("");
+  // Unified state to hold either the found meaning or the error message.
+  // This ensures a consistent element is always rendered after "Definition:".
+  const [displayMessage, setDisplayMessage] = useState("");
 
   // Function to handle the search logic when the button is clicked or Enter is pressed
   const handleSearch = () => {
     // Trim whitespace from the search term and convert to lowercase for case-insensitive search
     const normalizedSearchTerm = searchTerm.trim().toLowerCase();
 
-    // Reset previous results/errors
-    setFoundMeaning("");
-    setErrorMessage("");
+    // Clear previous message before a new search
+    setDisplayMessage("");
 
-    // If the search term is empty, clear previous results and do nothing further.
-    // The problem implies no specific message for empty search, just for "not found" words.
+    // If the search term is empty, do nothing further as per problem context.
+    // The problem specifies "Word not found" only for actual searches of non-existent words.
     if (normalizedSearchTerm === "") {
       return;
     }
@@ -38,26 +36,25 @@ function App() {
     );
 
     if (entry) {
-      // If word is found, set its meaning
-      setFoundMeaning(entry.meaning);
+      // If word is found, set its meaning to displayMessage
+      setDisplayMessage(entry.meaning);
     } else {
-      // If word is not found, set the specific error message
-      setErrorMessage("Word not found in the dictionary.");
+      // If word is not found, set the specific error message to displayMessage
+      setDisplayMessage("Word not found in the dictionary.");
     }
   };
 
   // Function to update the searchTerm state as the user types
   const handleInputChange = (event) => {
     setSearchTerm(event.target.value);
-    // Clear any previous meaning or error message when the user starts typing again
-    setFoundMeaning("");
-    setErrorMessage("");
+    // Clear any previous display message when the user starts typing again
+    setDisplayMessage("");
   };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4 font-sans">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        {/* Changed h1 to "Dictionary App" as per test expectation */}
+        {/* H1 title as per test expectation */}
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">Dictionary App</h1>
 
         {/* Search input and button container */}
@@ -85,18 +82,14 @@ function App() {
 
         {/* Results display area */}
         <div className="min-h-[80px]"> {/* Added min-height to prevent layout shifts */}
-          {errorMessage && (
-            // Display error message if word not found
-            <p className="text-red-600 text-lg font-medium">{errorMessage}</p>
-          )}
-
-          {/* Always render the definition heading, but conditionally show the meaning paragraph */}
           <div className="definition-box text-left">
+            {/* "Definition:" heading is always present as per screenshots */}
             <h3 className="text-xl font-semibold text-gray-700 mb-2">Definition:</h3>
-            {foundMeaning && (
-              // Display definition if word is found
-              <p className="text-gray-600 leading-relaxed">{foundMeaning}</p>
-            )}
+            {/* Always render the paragraph. Its content will be controlled by displayMessage.
+                If displayMessage is empty, the paragraph will be empty, which is fine. */}
+            <p className={`text-gray-600 leading-relaxed ${displayMessage === "Word not found in the dictionary." ? 'text-red-600 font-medium' : ''}`}>
+              {displayMessage}
+            </p>
           </div>
         </div>
       </div>
