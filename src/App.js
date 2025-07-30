@@ -22,11 +22,12 @@ function App() {
     const normalizedSearchTerm = searchTerm.trim().toLowerCase();
 
     // Clear previous message before a new search
-    setDisplayMessage("");
+    setDisplayMessage(""); // Always clear previous message at the start of a new search
 
-    // If the search term is empty, do nothing further as per problem context.
-    // The problem specifies "Word not found" only for actual searches of non-existent words.
+    // FIX: If the search term is empty, set the specific "Word not found" message.
+    // This addresses the "No Search Term Tests" failure.
     if (normalizedSearchTerm === "") {
+      setDisplayMessage("Word not found in the dictionary.");
       return;
     }
 
