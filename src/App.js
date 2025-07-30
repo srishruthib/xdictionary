@@ -26,9 +26,9 @@ function App() {
     setFoundMeaning("");
     setErrorMessage("");
 
-    // If the search term is empty, do nothing or show a specific message (optional, but good UX)
+    // If the search term is empty, clear previous results and do nothing further.
+    // The problem implies no specific message for empty search, just for "not found" words.
     if (normalizedSearchTerm === "") {
-      // For this problem, we just clear previous states if input is empty
       return;
     }
 
@@ -57,7 +57,8 @@ function App() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4 font-sans">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">XDictionary</h1>
+        {/* Changed h1 to "Dictionary App" as per test expectation */}
+        <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">Dictionary App</h1>
 
         {/* Search input and button container */}
         <div className="flex gap-3 mb-6">
@@ -89,13 +90,14 @@ function App() {
             <p className="text-red-600 text-lg font-medium">{errorMessage}</p>
           )}
 
-          {foundMeaning && (
-            // Display definition if word is found
-            <div className="text-left">
-              <h3 className="text-xl font-semibold text-gray-700 mb-2">Definition:</h3>
+          {/* Always render the definition heading, but conditionally show the meaning paragraph */}
+          <div className="definition-box text-left">
+            <h3 className="text-xl font-semibold text-gray-700 mb-2">Definition:</h3>
+            {foundMeaning && (
+              // Display definition if word is found
               <p className="text-gray-600 leading-relaxed">{foundMeaning}</p>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </div>
